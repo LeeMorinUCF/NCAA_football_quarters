@@ -200,17 +200,22 @@ for link in soup.find_all('a'):
 #------------------------------------------------------------------------------
 
 
-year_list = range(2022, 1990, -1)
 
 import pandas as pd
+
+
 # Initialize a data frame of scores from these games.
 game_links_full = pd.DataFrame(columns = 
                       ['year', 'url_suffix'])
 
 
+# year_list = range(2022, 2020, -1)
+year_list = range(2022, 1990, -1)
 
 
 for year in year_list:
+    
+    print("Collecting links for games in " + str(year) + ".")
     
     # Set path to html file for schedule.
     schedule_file_name = str(year) + '-schedule.html'
@@ -236,6 +241,7 @@ for year in year_list:
     
     # Find all the anchor tags with "href"
     # Then extract the ones relating to scores in each game.
+    row_num = 0
     for link in soup.find_all('a'):
         
         # Get text of address.
@@ -252,12 +258,43 @@ for year in year_list:
             
             # Record the addresses in the data frame.
             # print(url_text)
+            game_links_sub['url_suffix'][row_num] = url_text
+            row_num = row_num + 1
             
     # Append the year that the game was held.
     game_links_sub['year'] = year
 
-    # Append into the full dataset. 
-    game_links_full = game_links_full.append(game_links_sub)
+    # Append nonempty rows into the full dataset. 
+    game_links_full = game_links_full.append(game_links_sub[0:game_count])
+
+
+game_links_sub.columns
+game_links_sub.describe()
+game_links_sub.value_counts()
+
+len(game_links_sub)
+
+
+
+game_links_full.describe()
+
+len(game_links_full)
+
+
+game_links_full[0:10]
+
+
+
+game_links_full.value_counts()
+
+
+
+
+# Set path to csv file for links in schedule.
+game_links_file_name = 'game_links.csv'
+schedule_file_path = drive_path + data_schedule_folder + game_links_file_name 
+
+game_links_full.to_csv(schedule_file_path)
 
 
 
