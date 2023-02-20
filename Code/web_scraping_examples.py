@@ -431,10 +431,10 @@ os.getcwd()
 # Set paths for handling files.
 ##################################################
 
+# Data from games will be stored in a particular folder of html files. 
+data_in_folder = 'Research\\NoQuarter\\NCAA_football_quarters\\Data\\WebData\\Games\\' 
 
-data_in_folder = 'Research\\NoQuarter\\NCAA_football_quarters\\Data\\WebData\\' 
-
-# Output will be saved in a folder specific to the data appendix.
+# Output will be saved in a folder for regression analysis.
 data_out_folder = 'Research\\NoQuarter\\NCAA_football_quarters\\Data\\RegData\\' 
 
 
