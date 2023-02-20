@@ -276,6 +276,9 @@ len(game_links_sub)
 
 
 
+
+
+game_links_full.columns
 game_links_full.describe()
 
 len(game_links_full)
@@ -295,6 +298,85 @@ game_links_file_name = 'game_links.csv'
 schedule_file_path = drive_path + data_schedule_folder + game_links_file_name 
 
 game_links_full.to_csv(schedule_file_path)
+
+
+
+
+#------------------------------------------------------------------------------
+# Loop over years to obtain all the games in each of the schedules.
+#------------------------------------------------------------------------------
+
+# First attempt:
+# After about 30 files.
+# HTTPError: Too Many Requests
+
+# Get some sleep in between requests.
+import time
+import random
+
+for i in range(10):
+    
+    seconds_of_sleep = random.lognormvariate(mu = 0.3, sigma = 0.5)
+    print("Sleeping for " + str(seconds_of_sleep) + " seconds.")
+    
+    time.sleep(seconds_of_sleep)
+    print(i)
+
+
+
+
+# Output will be saved in a folder for regression analysis.
+data_game_folder = 'Research\\NoQuarter\\NCAA_football_quarters\\Data\\WebData\\Games\\' 
+
+
+# Set path to html files for games.
+game_file_name = str(year) + '-schedule.html'
+game_file_path = drive_path + data_schedule_folder + game_file_name 
+
+
+# year_list = range(2022, 2010, -1)
+# year_list = range(2010, 1990, -1)
+year_list = range(2022, 2021, -1)
+
+# year = 2022
+for year in year_list:
+    
+    
+    # Get the subset of games for the year.
+    game_links_year = game_links_full['url_suffix'][game_links_full['year'] == year]
+    
+    
+    # Loop over the games in a season.
+    # game_num = 0
+    for game_num in range(len(game_links_year)):
+        
+        game_link = game_links_year[game_num]
+            
+        
+        # Set the url for the schedule.
+        url = 'https://www.sports-reference.com' + game_link
+        
+        # Get some sleep in between requests.
+        seconds_of_sleep = random.lognormvariate(mu = 0.3, sigma = 0.5)
+        time.sleep(seconds_of_sleep)
+        
+        
+        # Read the NCAA football scores for this game.
+        response_object = urlrq.urlopen(url, context = ssl.create_default_context(cafile = certifi.where()))
+            
+        
+        # Set path to file for game.
+        data_game_folder_yr = data_game_folder + str(year) + '\\'
+        game_file_name = game_link.replace('/cfb/boxscores/', '')
+        game_file_path = drive_path + data_game_folder_yr + game_file_name 
+        
+        
+        # Write to an html file on the hard drive.
+        with open(game_file_path, 'wb') as output_file:
+            for line in response_object:
+                output_file.write(line)
+
+
 
 
 
